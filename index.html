@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeSoft Job Board</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f4f7f9;
+      color: #333;
+    }
+    
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    
+    header h1 { font-size: 2.2em; margin-bottom: 10px; }
+    header p { font-size: 1.1em; opacity: 0.9; }
+    
+    .search-bar {
+      max-width: 600px;
+      margin: 20px auto;
+      display: flex;
+      gap: 10px;
+      padding: 0 20px;
+    }
+    
+    .search-bar input {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+    
+    .search-bar button {
+      padding: 12px 25px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    
+    .section-title {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      color: #4a90e2;
+    }
+    
+    .job-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    .job-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+    
+    .job-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    
+    .job-title {
+      font-size: 1.3em;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    
+    .company {
+      color: #667eea;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    .details {
+      font-size: 0.9em;
+      color: #666;
+      margin: 8px 0;
+    }
+    
+    .badge {
+      display: inline-block;
+      background: #e8f0fe;
+      color: #4a90e2;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      margin: 5px 5px 5px 0;
+    }
+    
+    .apply-btn {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
+      background: #34c759;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .apply-btn:hover { background: #28a745; }
+    
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.6em; }
+      .job-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>💼 CodeSoft Job Board</h1>
+    <p>Find Your Dream Job | Post Job Openings</p>
+  </header>
+  
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search jobs: React, Python, Remote...">
+    <button onclick="searchJobs()">Search</button>
+  </div>
+  
+  <div class="container">
+    <h2 class="section-title">🔥 Featured Job Listings</h2>
+    <div class="job-grid" id="jobListings"></div>
+  </div>
+
+  <script>
+    const jobs = [
+      {
+        title: "Frontend Developer",
+        company: "Tech Solutions Pvt Ltd",
+        location: "Hyderabad, Remote",
+        type: "Full-time",
+        salary: "₹6-10 LPA",
+        skills: ["React", "JavaScript", "CSS"]
+      },
+      {
+        title: "Python Developer Intern",
+        company: "CodeSoft",
+        location: "Work from Home",
+        type: "Internship",
+        salary: "₹15k/month",
+        skills: ["Python", "Django", "API"]
+      },
+      {
+        title: "UI/UX Designer",
+        company: "Creative Minds",
+        location: "Bangalore",
+        type: "Full-time",
+        salary: "₹8-12 LPA",
+        skills: ["Figma", "Adobe XD", "Design"]
+      },
+      {
+        title: "Java Backend Developer",
+        company: "Data Corp",
+        location: "Chennai, Hybrid",
+        type: "Full-time", 
+        salary: "₹10-15 LPA",
+        skills: ["Java", "Spring Boot", "MySQL"]
+      }
+    ];
+
+    function displayJobs(jobArray) {
+      const container = document.getElementById('jobListings');
+      container.innerHTML = '';
+      
+      jobArray.forEach(job => {
+        container.innerHTML += `
+          <div class="job-card">
+            <div class="job-title">${job.title}</div>
+            <div class="company">${job.company}</div>
+            <div class="details">📍 ${job.location}</div>
+            <div class="details">💼 ${job.type} | 💰 ${job.salary}</div>
+            <div>
+              ${job.skills.map(skill => `<span class="badge">${skill}</span>`).join('')}
+            </div>
+            <button class="apply-btn" onclick="applyJob('${job.title}')">Apply Now</button>
+          </div>
+        `;
+      });
+    }
+
+    function searchJobs() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = jobs.filter(job => 
+        job.title.toLowerCase().includes(query) ||
+        job.company.toLowerCase().includes(query) ||
+        job.skills.some(skill => skill.toLowerCase().includes(query))
+      );
+      displayJobs(filtered);
+    }
+
+    function applyJob(title) {
+      alert(`✅ Application submitted for: ${title}\nWe will contact you soon!`);
+    }
+
+    // Load all jobs on page load
+    displayJobs(jobs);
+  </script>
+</body>
+</html>
